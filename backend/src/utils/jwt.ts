@@ -3,6 +3,8 @@ import jwt, { SignOptions } from "jsonwebtoken";
 const JWT_SECRET = process.env.JWT_SECRET;
 
 if (!JWT_SECRET) {
+  console.error("❌ JWT_SECRET is missing from your .env file!");
+  console.error("Please add JWT_SECRET=your_secret_key to your .env file");
   throw new Error("JWT_SECRET is missing from your .env file!");
 }
  

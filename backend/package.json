@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/server.ts",
   "scripts": {
-    "dev": "DEBUG= nodemon --exec tsx src/server.ts",
+    "dev": "nodemon --exec tsx src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
     "prisma:generate": "prisma generate",
@@ -20,7 +20,10 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.2.0",
     "@types/pg": "^8.16.0",
-    "@types/puppeteer-core": "^5.4.0"
+    "@types/puppeteer-core": "^5.4.0",
+    "nodemon": "^3.1.11",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",
