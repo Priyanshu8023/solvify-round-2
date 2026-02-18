@@ -121,7 +121,7 @@ export default function SignUp() {
                             animate={{ opacity: 1, y: 0 }}
                             className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-xl flex items-center gap-3"
                         >
-                            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                            <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
                             <p className="text-green-400 text-sm">Account created successfully! Redirecting...</p>
                         </motion.div>
                     )}
@@ -133,7 +133,7 @@ export default function SignUp() {
                             animate={{ opacity: 1, y: 0 }}
                             className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-3"
                         >
-                            <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                            <AlertCircle className="w-5 h-5 text-red-500 shrink-0" />
                             <p className="text-red-400 text-sm">{error}</p>
                         </motion.div>
                     )}

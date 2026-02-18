@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useState, CSSProperties } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
   const [particles, setParticles] = useState<Array<{ style: CSSProperties }>>([]);
-
+  const router = useRouter()
   useEffect(() => {
     setIsVisible(true);
     setParticles(
@@ -142,7 +143,7 @@ export default function Hero() {
             <p className="text-gray-400 text-lg mb-6">
               Ready to prove your AI mastery?
             </p>
-            <button className="group relative px-10 py-4 text-lg font-bold text-[#080805] bg-[#ffd700] overflow-hidden transition-all duration-300 hover:scale-105">
+            <button onClick={()=>{router.push(`/{level}`)}} className="group relative px-10 py-4 text-lg font-bold text-[#080805] bg-[#ffd700] overflow-hidden transition-all duration-300 hover:scale-105">
               <span className="relative z-10 flex items-center justify-center gap-2">
                 Enter Round 2
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
