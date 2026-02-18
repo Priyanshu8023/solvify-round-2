@@ -1,14 +1,13 @@
 import { Request, Response } from "express";
 import { useScrapper } from "../services/useScrapper";
-//import {protect } from "../middlewares/auth.middlewares";
 import prisma from "../lib/prisma";
+
 export const useScrapperController = async (
     req: Request,
     res: Response
 ) => {
     try {
-        const { prompt } = req.body;
-        const url = req.url;
+        const { prompt, targetUrl: reqTargetUrl } = req.body;
 
         if (!prompt || typeof prompt !== "string") {
             return res.status(400).json({
@@ -22,8 +21,7 @@ export const useScrapperController = async (
             return res.status(401).json({ success: false, message: "Unauthorized" });
         }
 
-        // This URL should probably be an environment variable or passed in the request
-        const targetUrl = process.env.GANDALF_URL || "https://gandalf.lakera.ai/";
+        const targetUrl = reqTargetUrl || process.env.GANDALF_URL || "https://gandalf.lakera.ai/";
         const answer = await useScrapper({ url: targetUrl, prompt })
 
         await prisma.promptQuery.create({
@@ -34,7 +32,7 @@ export const useScrapperController = async (
             }
         })
 
-        return res.status(500).json({
+        return res.status(200).json({
             success: true,
             data: { answer }
         })
