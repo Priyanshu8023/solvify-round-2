@@ -8,43 +8,9 @@ import StarBorder from './Effects/starBorder';
 import LevelTransition from './Effects/LevelTransition';
 
 
+import { Scrapper } from '../services/api';
+
 const TOTAL_LEVELS = 8;
-
-interface ApiResponse {
-  success: boolean;
-  data: string;
-}
-
-const TOKEN_KEY = process.env.TOKEN_KEY || "token";
-const fetchGandalfResponse = async (prompt: string, targetUrl: string): Promise<ApiResponse> => {
-  try {
-    const token = localStorage.getItem(TOKEN_KEY);
-    const API_URL = "http://localhost:5000/api/scrapper";
-
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token || ''}`
-      },
-      body: JSON.stringify({ prompt, targetUrl }),
-    });
-
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.message || "Failed");
-
-    return { success: true, data: data.response || JSON.stringify(data) };
-
-  } catch (error: any) {
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    return {
-      success: false,
-      data: errorMessage.includes("token")
-        ? "ACCESS DENIED: Authorization token missing. Please log in."
-        : "CONNECTION ERROR: Unable to establish uplink with AI Core."
-    };
-  }
-};
 
 interface PromptBoxProps {
   initialLevel?: number;
@@ -100,10 +66,15 @@ const MascotPrompt = ({ initialLevel = 1 }: PromptBoxProps) => {
     setResponse(null);
     setIsLoading(true);
     try {
-      const result = await fetchGandalfResponse(query, targetUrl);
-      setResponse(result.data);
-    } catch (error) {
-      setResponse("SYSTEM FAILURE: Unexpected data packet received.");
+      const answer = await Scrapper.askScrapper(query, targetUrl);
+      setResponse(answer);
+    } catch (error: any) {
+      const errorMessage = error.message || "Unknown error";
+      setResponse(
+        errorMessage.includes("401") || errorMessage.toLowerCase().includes("unauthorized")
+          ? "ACCESS DENIED: Authorization token missing. Please log in."
+          : `CONNECTION ERROR: ${errorMessage}`
+      );
     } finally {
       setIsLoading(false);
       setQuery('');
@@ -142,8 +113,6 @@ const MascotPrompt = ({ initialLevel = 1 }: PromptBoxProps) => {
         show={showLevelTransition}
         level={transitionLevel <= TOTAL_LEVELS ? transitionLevel : TOTAL_LEVELS}
       />
-
-      {/* Main Tactical Container - Added pt-24 to clear Navbar */}
       <main className="relative z-10 flex-1 flex flex-col max-w-7xl mx-auto w-full p-4 md:p-8 pt-24 md:pt-10 gap-6 min-h-screen">
 
         {/* --- HEADER: TOP STATUS BAR --- */}
