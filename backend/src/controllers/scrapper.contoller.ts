@@ -22,7 +22,7 @@ export const useScrapperController = async (
         }
 
         const targetUrl = reqTargetUrl || process.env.GANDALF_URL || "https://gandalf.lakera.ai/";
-        const answer = await useScrapper({ url: targetUrl, prompt })
+        const answer = await useScrapper({ url: targetUrl, prompt, userId })
 
         await prisma.promptQuery.create({
             data: {

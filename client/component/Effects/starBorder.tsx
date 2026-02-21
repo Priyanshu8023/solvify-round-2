@@ -10,7 +10,7 @@ interface StarBorderProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const StarBorder: React.FC<StarBorderProps> = ({
-  as: Component = "button",
+  as: Component = "div",
   className = "",
   color = "cyan",
   speed = "6s",

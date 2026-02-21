@@ -14,7 +14,7 @@ const apiClient: AxiosInstance = axios.create({
         "Content-Type": "application/json",
     },
     withCredentials: true,
-    timeout: 10000,
+    timeout: 60000,
 })
 
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
@@ -23,7 +23,7 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
         if (token && config.headers) {
             config.headers.Authorization = `Bearer ${token}`;
         }
-        
+
         // Log request in development
         if (process.env.NODE_ENV === "development") {
             console.log(`📤 ${config.method?.toUpperCase()} ${config.url}`, config.data || "");
@@ -48,8 +48,12 @@ apiClient.interceptors.response.use((response) => response,
             }
         }
 
-        const message = error.response?.data?.message || "Something went wrong";
-        return Promise.reject({ ...error, message });
+        const message = error.response?.data?.message
+            || (error.code === 'ECONNABORTED' ? 'Request timed out' : error.message)
+            || "Something went wrong";
+
+        error.message = message;
+        return Promise.reject(error);
     });
 
 export default apiClient

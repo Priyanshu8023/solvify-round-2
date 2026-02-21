@@ -7,9 +7,9 @@ if (!JWT_SECRET) {
   console.error("Please add JWT_SECRET=your_secret_key to your .env file");
   throw new Error("JWT_SECRET is missing from your .env file!");
 }
- 
+
 export interface JwtPayload {
-  userId: string;
+  userId: number;
   email: string;
 }
 
@@ -18,7 +18,7 @@ export const signJwt = (
   options?: SignOptions
 ): string => {
   return jwt.sign(payload, JWT_SECRET, {
-    expiresIn: "1d", // Default to 1 day session
+    expiresIn: "1d",
     ...options,
   });
 };
@@ -27,6 +27,6 @@ export const verifyJwt = <T extends object = JwtPayload>(token: string): T | nul
   try {
     return jwt.verify(token, JWT_SECRET) as T;
   } catch (error) {
-    return null; // Token is expired or tampered with
+    return null;
   }
 };
