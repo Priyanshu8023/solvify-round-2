@@ -7,8 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import StarBorder from './Effects/starBorder';
 import LevelTransition from './Effects/LevelTransition';
 
-
-import { Scrapper } from '../services/api';
+import { Scrapper, QuestionApi } from '../services/api';
 
 const TOTAL_LEVELS = 8;
 
@@ -46,8 +45,7 @@ const MascotPrompt = ({ initialLevel = 1 }: PromptBoxProps) => {
   useEffect(() => {
     const fetchQuestion = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/${level}`);
-        const data = await res.json();
+        const data = await QuestionApi.getQuestion(level);
         if (data.question) {
           setQuestionDesc(data.question.question);
           setCorrectAnswer(data.question.answer);
@@ -81,11 +79,16 @@ const MascotPrompt = ({ initialLevel = 1 }: PromptBoxProps) => {
     }
   };
 
-  const handlePasswordSubmit = (e: FormEvent) => {
+  const handlePasswordSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!passwordInput.trim()) return;
 
     if (correctAnswer && passwordInput === correctAnswer) {
+      try {
+        await QuestionApi.submitAnswer(level, passwordInput);
+      } catch (error) {
+        console.error("Failed to update score on backend:", error);
+      }
       setVerifyStatus('success');
       const nextLevel = level + 1;
       setTransitionLevel(nextLevel);

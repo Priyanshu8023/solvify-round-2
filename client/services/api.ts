@@ -37,3 +37,24 @@ export const Scrapper = {
         }
     }
 }
+
+export const QuestionApi = {
+    async getQuestion(id: number) {
+        try {
+            const { data } = await apiClient.get(`/${id}`);
+            return data;
+        } catch (error: any) {
+            console.error("Error fetching question", error);
+            throw error;
+        }
+    },
+    async submitAnswer(id: number, answer: string) {
+        try {
+            const { data } = await apiClient.post(`/${id}/submit`, { answer });
+            return data;
+        } catch (error: any) {
+            console.error("Error submitting answer", error);
+            throw error;
+        }
+    }
+}
