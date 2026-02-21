@@ -23,6 +23,7 @@ model User {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
   prompts         PromptQuery[]
+  solvedQuestions SolvedQuestion[]
 }
 
 model PromptQuery {
@@ -41,4 +42,16 @@ model Question{
    url String
    level Int
    createdAt DateTime @default(now())
+   solvedBy SolvedQuestion[]
+}
+
+model SolvedQuestion {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  questionId Int
+  question  Question @relation(fields: [questionId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, questionId])
 }
